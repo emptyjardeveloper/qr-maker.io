@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate QR Code</title>
+</head>
+
+<body>
+
+    <input type="text" name="text" id="text"><button id="click">Generate QR Code</button>
+    <button id="downloadBtn">Download QR Code</button>
+
+    <img style="display:block" id="img" alt="">
+
+    <script>
+        document.getElementById("click").addEventListener("click", function () {
+            let rawData = document.getElementById('text').value
+            let checksum = crc16_ccitt_false(rawData)
+
+            // Encode the data in URI format
+            var encodedData = encodeURIComponent(rawData + checksum);
+
+            var QrUrl = "https://quickchart.io/chart?cht=qr&chs=500x500&chl=" + encodedData;
+            var imgElement = document.getElementById("img");
+            imgElement.setAttribute("src", QrUrl);
+        })
+
+        document.getElementById("downloadBtn").addEventListener("click", function () {
+            var imgSrc = document.getElementById("img").src;
+            var fileName = "img.png";
+
+            // Create a link element
+            var downloadLink = document.createElement("a");
+            downloadLink.href = imgSrc;
+            downloadLink.download = fileName;
+
+            // Append the link to the body
+            document.body.appendChild(downloadLink);
+
+            // Trigger the click event of the link
+            downloadLink.click();
+
+            // Clean up
+            document.body.removeChild(downloadLink);
+        });
+
+        function crc16_ccitt_false(data) {
+            var crc = 0xFFFF;
+            for (var i = 0; i < data.length; i++) {
+                crc ^= (data.charCodeAt(i) << 8);
+                for (var j = 0; j < 8; j++) {
+                    if (crc & 0x8000) {
+                        crc = (crc << 1) ^ 0x1021;
+                    } else {
+                        crc = crc << 1;
+                    }
+                    crc &= 0xFFFF;
+                }
+            }
+            return crc.toString(16).toUpperCase().padStart(4, '0');
+        }
+    </script>
+
+</body>
+
+</html>
