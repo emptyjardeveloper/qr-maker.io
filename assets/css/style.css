@@ -45,7 +45,7 @@ body {
     align-items: center !important;
     background-color: transparent !important;
     filter: grayscale(300);
-    opacity: 1.0 !important;
+    opacity: 1 !important;
     margin: 10px 0 !important;
 }
 
@@ -80,7 +80,7 @@ body {
     position: relative;
     box-sizing: border-box;
     padding: 20px 0;
-    border-bottom: .5px solid #bcbcbc;
+    border-bottom: 0.5px solid #bcbcbc;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -315,7 +315,7 @@ input[type="number"] {
     background-color: #fafafa;
     padding: 20px;
     box-sizing: border-box;
-    border: .5px solid var(--borderColor);
+    border: 0.5px solid var(--borderColor);
     border-radius: 5px;
     position: relative;
 }
@@ -333,7 +333,7 @@ input[type="number"] {
 }
 
 .modal-content img {
-    border: .5px solid var(--borderColor);
+    border: 0.5px solid var(--borderColor);
     margin: 10px 0;
 }
 
@@ -377,7 +377,7 @@ input[type="number"] {
     background: #eaeceb;
     padding: 10px 25px 10px 25px;
     box-sizing: border-box;
-    border: .5px solid var(--borderColor);
+    border: 0.5px solid var(--borderColor);
     border-radius: 5px;
     justify-content: center;
     align-items: center;
@@ -403,7 +403,7 @@ input[type="number"] {
     background: #eaeceb;
     padding: 10px 25px 10px 25px;
     box-sizing: border-box;
-    border: .5px solid var(--borderColor);
+    border: 0.5px solid var(--borderColor);
     border-radius: 5px;
     justify-content: center;
     align-items: center;
@@ -421,7 +421,7 @@ input[type="number"] {
     padding: 10px;
     cursor: move;
     z-index: 10;
-    background-color: #2196F3;
+    background-color: #2196f3;
     color: #fff;
 }
 
@@ -433,7 +433,7 @@ input[type="number"] {
     position: absolute;
     left: 10px;
     background-color: var(--brandColor);
-    border: .5px solid var(--borderColor);
+    border: 0.5px solid var(--borderColor);
     border-radius: 5px;
     padding: 5px 10px;
     box-sizing: border-box;
@@ -441,6 +441,18 @@ input[type="number"] {
 }
 
 #download {
+    position: absolute;
+    bottom: 20px;
+    width: 80%;
+    padding: 10px 25px;
+    background-color: var(--brandColor);
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fafafa;
+}
+
+#download-merge {
     position: absolute;
     bottom: 20px;
     width: 80%;
@@ -502,7 +514,7 @@ input[type="number"] {
 .border {
     display: block;
     width: 100%;
-    height: .5px;
+    height: 0.5px;
     background-color: #d2d2d2;
     margin: 40px 0;
 }
