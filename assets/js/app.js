@@ -3,7 +3,7 @@ let swiper = new Swiper('.swiper-container', {
     spaceBetween: 0,
     effect: 'fade',
     allowTouchMove: false,
-    initialSlide: 0,
+    initialSlide: 1,
     fadeEffect: {
         crossFade: true
     },
@@ -12,7 +12,7 @@ let swiper = new Swiper('.swiper-container', {
         clickable: true,
         renderBullet: function (index, className) {
             var icons = ['fa fa-qrcode', 'fa fa-puzzle-piece', 'fa fa-terminal', 'fa fa-file-image-o']; // Different texts for each button
-            var texts = ['Scanner', 'Custom QR', 'Checksum', 'Draw QRIS']; // Different texts for each button
+            var texts = ['Scanner', 'Customize', 'Checksum', 'Draw QRIS']; // Different texts for each button
             return '<span class="' + className + ' nav-btn"><i class="' + icons[index] + '"></i> ' + texts[index] + ' </span>';
         },
     },
