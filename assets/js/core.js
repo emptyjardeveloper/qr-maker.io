@@ -18,10 +18,14 @@ function qrReader(container) {
             const code = jsQR(imageData.data, imageData.width, imageData.height);
             if (!code) {
                 document.getElementById(container).textContent = "No QR code found!";
-
                 document.getElementById("copy-btn").classList.remove("show-copy-btn");
+                document.getElementById("qrCodeSource").value = ""
             }
-            document.getElementById(container).textContent = code.data.toString().trim();
+
+            let fixCode = code.data.toString().trim();
+            document.getElementById("qrCodeSource").value = fixCode
+            document.getElementById(container).textContent = fixCode
+
             document.getElementById("copy-btn").classList.add("show-copy-btn");
         };
         image.src = event.target.result;
@@ -51,7 +55,7 @@ function qrMergerReader() {
 
             const imageData = context.getImageData(0, 0, image.width, image.height);
             const code = jsQR(imageData.data, imageData.width, imageData.height);
-            const container = document.getElementById("parse");
+            const container = document.getElementById("master-status-alert");
             const alert = document.getElementById("alert-text");
             const alertIcon = document.getElementById("alert-icon");
 
@@ -69,8 +73,6 @@ function qrMergerReader() {
 
             let parseData = parseQRIS(fixCode);
             let uniQR = false;
-
-            console.log(code.data.toString().trim());
 
             for (let i = 0; i < parseData.length; i++) {
                 if (parseData[i].objectId == 51) {
@@ -104,7 +106,7 @@ function qrMergerReader() {
 }
 
 document.getElementById("mergeBtn").addEventListener("click", function () {
-    if (getCookie("data-master") === "" && getCookie("data-client=length") === "" && getCookie("data-client=value") === "") {
+    if (getCookie("data-master") === "" && getCookie("data-client:length") === "" && getCookie("data-client:value") === "") {
         return 0;
     }
     let cmasterData = getCookie("data-master");
@@ -130,9 +132,6 @@ document.getElementById("mergeBtn").addEventListener("click", function () {
 
         if (parseData[i].objectId == 59) title_name = parseData[i].objectValue;
     }
-
-    console.log(data);
-    console.log(cmasterData);
 
     let rawData = data;
 
@@ -305,7 +304,7 @@ function getChecksum() {
 
 // Render QR Data
 document.getElementById("drawQr").addEventListener("click", function () {
-    let rawData = document.getElementById("sourceCode").textContent;
+    let rawData = document.getElementById("sourceCode").textContent.trim();
 
     var QrUrl = "https://quickchart.io/chart?cht=qr&chs=250x250&chl=" + rawData;
     var imgElement = document.getElementById("img");
@@ -396,35 +395,131 @@ function parseQRIS(qrisString) {
     return result;
 }
 
-document.getElementById("phar").addEventListener("click", function () {
-    let data = document.getElementById("result").textContent;
-    let parseData = parseQRIS(data);
+document.getElementById("getQrCode").addEventListener("click", function () {
+    let data = document.getElementById("qrCodeSource").value
+    // let defaultView = document.getElementById("default").style.display = "flex"
 
-    let container = document.getElementById("parse");
-    if (container.firstChild) {
-        while (container.hasChildNodes()) {
-            container.removeChild(container.firstChild);
+    if (data != "") {
+        let defaultView = document.getElementById("default").style.display = "none"
+        let parseData = parseQRIS(data);
+
+        let container = document.getElementById("splitter-display");
+        if (container.firstChild) {
+            while (container.hasChildNodes()) {
+                container.removeChild(container.firstChild);
+            }
         }
-    }
 
-    for (let i = 0; i < parseData.length; i++) {
+        for (let i = 0; i < parseData.length; i++) {
+            if (parseData[i].objectId == 63) {
+                continue
+            }
+            let input_row = document.createElement("div");
+            input_row.setAttribute("class", "input-row");
+            container.appendChild(input_row);
+            let input_group = document.createElement("div");
+            input_group.setAttribute("class", "input-group");
+            input_row.appendChild(input_group);
+
+            let inputObjectId = document.createElement("input");
+            inputObjectId.setAttribute("value", parseData[i].objectId);
+            inputObjectId.setAttribute("id", "objectId" + parseData[i].objectId);
+            inputObjectId.setAttribute("disabled", true);
+            input_group.appendChild(inputObjectId);
+            const str = "" + parseData[i].objectLength;
+            const pad = "00";
+            let inputObjectLength = document.createElement("input");
+            inputObjectLength.setAttribute("value", pad.substring(0, pad.length - str.length) + str);
+            inputObjectLength.setAttribute("id", "objectLength" + parseData[i].objectId + pad.substring(0, pad.length - str.length) + str);
+            inputObjectLength.setAttribute("disabled", true);
+            input_group.appendChild(inputObjectLength);
+            let inputObjectValue = document.createElement("input");
+            inputObjectValue.setAttribute("value", parseData[i].objectValue);
+            inputObjectValue.setAttribute("onkeyup", "resetLength(" + "objectId" + parseData[i].objectId + "," + "objectLength" + parseData[i].objectId + pad.substring(0, pad.length - str.length) + str + "," + "objectValue" + parseData[i].objectId + pad.substring(0, pad.length - str.length) + str + ")");
+            inputObjectValue.setAttribute("id", "objectValue" + parseData[i].objectId + pad.substring(0, pad.length - str.length) + str);
+            input_group.appendChild(inputObjectValue);
+        }
+        let assembleButton = document.createElement("input");
+        assembleButton.setAttribute("value", "Generate QRIS");
+        assembleButton.setAttribute("id", "assembleBtn");
+        assembleButton.setAttribute("type", "button");
+        assembleButton.setAttribute("onclick", "assembleBtn(" + parseData + ")");
+        container.appendChild(assembleButton);
+    }
+})
+
+function resetLength(id, len, val) {
+    const str = "" + document.getElementById(val.id).value.length
+    const pad = "00";
+
+    let valWrapper = pad.substring(0, pad.length - str.length) + str
+    len.value = valWrapper
+
+    if (id.value == "01" && val.value == "12") {
+        let container = document.getElementById("splitter-display");
+
         let input_row = document.createElement("div");
         input_row.setAttribute("class", "input-row");
+        container.appendChild(input_row);
+        input_row.setAttribute("id", "input-row-dynamic");
         container.appendChild(input_row);
         let input_group = document.createElement("div");
         input_group.setAttribute("class", "input-group");
         input_row.appendChild(input_group);
 
         let inputObjectId = document.createElement("input");
-        inputObjectId.setAttribute("value", parseData[i].objectId);
+        inputObjectId.setAttribute("value", "54");
+        inputObjectId.setAttribute("id", "dinamicId");
+        inputObjectId.setAttribute("disabled", true);
         input_group.appendChild(inputObjectId);
+
+
+        let l = document.createElement("input")
+        l.setAttribute("value", "02")
+        l.setAttribute("id", "dinamicLength")
+        l.setAttribute("disabled", true);
+        input_group.appendChild(l)
+
+        let v = document.createElement("input")
+        v.setAttribute("value", "01")
+        v.setAttribute("id", "dinamicValue")
+        v.setAttribute("onkeyup", "reset12Length()")
+        input_group.appendChild(v)
+
+        container.insertBefore(input_row, container.childNodes[container.childElementCount - 2]);
+    }
+
+    if (id.value == "01" && val.value != "12") {
+        let container = document.getElementById("input-row-dynamic");
+        container.remove()
+    }
+}
+
+function reset12Length() {
+    const str = "" + document.getElementById('dinamicValue').value.length
+    const pad = "00";
+
+    let valWrapper = pad.substring(0, pad.length - str.length) + str
+    document.getElementById('dinamicLength').value = valWrapper
+}
+
+function assembleBtn(qrData) {
+    let parseData = qrData;
+    let data = "";
+    for (let i = 0; i < parseData.length; i++) {
         const str = "" + parseData[i].objectLength;
         const pad = "00";
-        let inputObjectLength = document.createElement("input");
-        inputObjectLength.setAttribute("value", pad.substring(0, pad.length - str.length) + str);
-        input_group.appendChild(inputObjectLength);
-        let inputObjectValue = document.createElement("input");
-        inputObjectValue.setAttribute("value", parseData[i].objectValue);
-        input_group.appendChild(inputObjectValue);
+
+        //Reassemble the qr data that has been split and modified by user
+        let oId = document.getElementById("objectId" + parseData[i].objectId);
+        let length = document.getElementById("objectLength" + parseData[i].objectId + pad.substring(0, pad.length - str.length) + str);
+        let value = document.getElementById("objectValue" + parseData[i].objectId + parseData[i].objectValue);
+
+        if (parseData[i].objectId == 63) {
+            value = "";
+        }
+        data += parseData[i].objectId + pad.substring(0, pad.length - str.length) + length + value;
     }
-});
+
+    console.log(data)
+}

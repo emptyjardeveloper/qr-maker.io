@@ -3,7 +3,7 @@ let swiper = new Swiper('.swiper-container', {
     spaceBetween: 0,
     effect: 'fade',
     allowTouchMove: false,
-    initialSlide: 1,
+    initialSlide: 3,
     fadeEffect: {
         crossFade: true
     },
@@ -21,3 +21,22 @@ let swiper = new Swiper('.swiper-container', {
         prevEl: '.swiper-button-prev',
     },
 });
+
+
+let btn = document.getElementsByClassName("btn");
+let msg = document.getElementsByClassName("display");
+for (let i = 0; i < btn.length; i++) {
+    btn[i].addEventListener("click", function () {
+        for (let x = 0; x < msg.length; x++) {
+            if (msg[x] != msg[i]) {
+                msg[x].classList.add("hidden");
+                btn[x].classList.remove("focusBtn");
+                btn[x].classList.add("integrationButtonToggle");
+            }
+
+            msg[i].classList.remove("hidden");
+            btn[i].classList.add("focusBtn");
+            btn[i].classList.remove("integrationButtonToggle");
+        }
+    });
+}

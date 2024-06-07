@@ -1,50 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-        <title>Mobile Menu</title>
-        <!--     <base href="https://emptyjardeveloper.github.io/" /> -->
-        <link rel="stylesheet" href="/assets/css/style.css" />
-        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
-    </head>
 
-    <body>
-        <div class="container">
-            <div class="header">
-                <button id="restartButton" onclick="restartPage()"><i class="fa fa-refresh"></i></button>
-                <!-- <img src="/assets/images/logo.png" style="width:120px; height:auto;" alt=""> -->
-                <h2>QRIS</h2>
-            </div>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Mobile Menu</title>
+    <!--     <base href="https://emptyjardeveloper.github.io/" /> -->
+    <link rel="stylesheet" href="/qr-maker.io/assets/css/style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet" />
+</head>
 
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="swiper-content">
-                            <img src="/assets/images/add-file.png" style="width: 60%; height: auto" alt="sd" />
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="restartButton" onclick="restartPage()"><i class="fa fa-refresh"></i></button>
+            <!-- <img src="/assets/images/logo.png" style="width:120px; height:auto;" alt=""> -->
+            <h2>QRIS</h2>
+        </div>
 
-                            <button onclick="copyText('result', 'copy-btn')" class="copy-btn" id="copy-btn"><i class="fa fa-clone"></i></button>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="swiper-content">
+                        <img src="/qr-maker.io/assets/images/add-file.png" style="width: 60%; height: auto" alt="sd" />
 
-                            <div contenteditable="false" id="result" class="qrResult" readonly>Waiting for content upload...</div>
+                        <div class="group-first-btn">
+                            <button onclick="copyText('result', 'copy-btn')" class="copy-btn" id="copy-btn"><i
+                                    class="fa fa-clone"></i></button>
                         </div>
 
-                        <input type="file" onchange="qrReader('result')" accept="image/*" class="flying-button" />
+                        <div contenteditable="false" id="result" class="qrResult" readonly>Waiting for content upload...
+                        </div>
+
+                        <input type="hidden" id="qrCodeSource">
                     </div>
 
-                    <div class="swiper-slide">
-                        <div class="swiper-content">
+                    <input type="file" onchange="qrReader('result')" id="uploadQR" accept="image/*"
+                        class="flying-button" />
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="swiper-content">
+                        <section class="btn-area">
+                            <div class="btn focusBtn">Splitter</div>
+                            <div class="btn">G Algo</div>
+                            <div class="btn">S Algo</div>
+                        </section>
+
+                        <section class="display" id="splitter-display">
+                            <div id="default">
+                                <img src="/qr-maker.io/assets/images/transfer-files.png"
+                                    style="width:300px; height:300px;" alt="">
+                                <span>Go to scanner to run this program!</span>
+                            </div>
+
+                            <button id="getQrCode">Split</button>
+                            <div id="parse"></div>
+                        </section>
+
+                        <section class="display hidden">
                             <div class="upload-container">
                                 <div class="wrapper">
                                     <h4>Identify QRIS - Master</h4>
-                                    <label for="file-upload" class="custom-file-upload"> <i class="fas fa-cloud-upload-alt"></i> Upload Files </label>
-                                    <input id="file-upload" type="file" onchange="qrMergerReader('master-container')" accept="image/*" />
+                                    <label for="file-upload" class="custom-file-upload"> <i
+                                            class="fas fa-cloud-upload-alt"></i> Upload Files </label>
+                                    <input id="file-upload" type="file" onchange="qrMergerReader('master-container')"
+                                        accept="image/*" />
                                 </div>
 
-                                <div id="parse" class="alert-box">
+                                <div id="master-status-alert" class="alert-box">
                                     <i id="alert-icon" class="fa"></i>
                                     <span id="alert-text">Listening...</span>
                                 </div>
@@ -55,8 +85,10 @@
                             <div class="upload-container" id="client-qr-container">
                                 <div class="wrapper">
                                     <h4>Identify QRIS - Client</h4>
-                                    <label for="client-upload-merge" class="custom-file-upload"> <i class="fas fa-cloud-upload-alt"></i> Upload Files </label>
-                                    <input id="client-upload-merge" onchange="qrClientReader()" type="file" accept="image/*" />
+                                    <label for="client-upload-merge" class="custom-file-upload"> <i
+                                            class="fas fa-cloud-upload-alt"></i> Upload Files </label>
+                                    <input id="client-upload-merge" onchange="qrClientReader()" type="file"
+                                        accept="image/*" />
                                 </div>
 
                                 <div id="client-status-alert" class="alert-box">
@@ -80,64 +112,75 @@
                                     <button id="download-merge">Download Image</button>
                                 </div>
                             </div>
-                        </div>
+                        </section>
+
+                        <section class="display hidden">
+                            Test X Algo
+                        </section>
                     </div>
+                </div>
 
-                    <div class="swiper-slide">
-                        <div class="swiper-content">
-                            <span class="checksum-heading-text">Paste QR code down bellow!</span>
-                            <div contenteditable="true" class="rawQr" id="rawCode"></div>
-                            <button onclick="getChecksum()" class="generate-qr-btn"><i class="fa fa-retweet"></i></button>
-                            <div contenteditable="false" class="checksumResult" id="checksum-placeholder">Waiting for content...</div>
-                            <button class="checksum-copy-btn" id="copy-checksum-btn" onclick="copyText('checksum-placeholder', 'copy-checksum-btn')">Copy To Clipboard</button>
-                        </div>
+                <div class="swiper-slide">
+                    <div class="swiper-content">
+                        <span class="checksum-heading-text">Paste QR code down bellow!</span>
+                        <div contenteditable="true" class="rawQr" id="rawCode"></div>
+                        <button onclick="getChecksum()" class="generate-qr-btn"><i class="fa fa-retweet"></i></button>
+                        <div contenteditable="false" class="checksumResult" id="checksum-placeholder">Waiting for
+                            content...</div>
+                        <button class="checksum-copy-btn" id="copy-checksum-btn"
+                            onclick="copyText('checksum-placeholder', 'copy-checksum-btn')">Copy To Clipboard</button>
                     </div>
+                </div>
 
-                    <div class="swiper-slide">
-                        <div class="swiper-content">
-                            <div id="myForm" class="drawForm">
-                                <div class="form-group">
-                                    <label for="title">QR Name:</label>
-                                    <input autocomplete="false" type="text" id="title" name="title" placeholder="Enter title" />
-                                </div>
-                                <div class="form-group">
-                                    <label for="unique">Unique Number:</label>
-                                    <input autocomplete="false" type="number" id="unique" name="unique" placeholder="Enter unique value" />
-                                </div>
+                <div class="swiper-slide">
+                    <div class="swiper-content">
+                        <div id="myForm" class="drawForm">
+                            <div class="form-group">
+                                <label for="title">QR Name:</label>
+                                <input autocomplete="false" type="text" id="title" name="title"
+                                    placeholder="Enter title" value="test" />
+                            </div>
+                            <div class="form-group">
+                                <label for="unique">Unique Number:</label>
+                                <input autocomplete="false" type="number" id="unique" name="unique"
+                                    placeholder="Enter unique" value="test" />
+                            </div>
 
-                                <div class="form-group">
-                                    <label for="sourceCode">QR Source Code</label>
-                                    <div contenteditable="true" name="sourceCode" class="checksumResult" id="sourceCode">Data</div>
-                                </div>
-                                <button id="drawQr" class="draw-btn">Draw QR</button>
+                            <div class="form-group">
+                                <label for="sourceCode">QR Source Code</label>
+                                <div contenteditable="true" name="sourceCode" class="checksumResult" id="sourceCode">
+                                    Data</div>
+                            </div>
+                            <button id="drawQr" class="draw-btn">Draw QR</button>
 
-                                <div id="modal" class="modal">
-                                    <div class="modal-content" id="qrImage">
-                                        <span class="close">&times;</span>
+                            <div id="modal" class="modal">
+                                <div class="modal-content" id="qrImage">
+                                    <span class="close">&times;</span>
 
-                                        <div class="image-placeholder" id="qrContainer">
-                                            <span id="unique-placeholder"></span>
-                                            <img id="img" />
-                                            <span id="title-placeholder"></span>
-                                        </div>
-
-                                        <button id="download">Download Image</button>
+                                    <div class="image-placeholder" id="qrContainer">
+                                        <span id="title-placeholder"></span>
+                                        <img id="img" />
+                                        <span id="unique-placeholder"></span>
                                     </div>
+
+                                    <button id="download">Download Image</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="swiper-pagination"></div>
         </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
-        <script src="/assets/js/dom-to-image.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/jsqr"></script>
-        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-        <script src="/assets/js/core.js"></script>
-        <script src="/assets/js/app.js"></script>
-    </body>
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script src="/qr-maker.io/assets/js/dom-to-image.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="/qr-maker.io/assets/js/core.js"></script>
+    <script src="/qr-maker.io/assets/js/app.js"></script>
+</body>
+
 </html>
