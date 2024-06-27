@@ -386,18 +386,16 @@ input[type="number"] {
 #title-placeholder {
     display: none;
     width: 100%;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
-    color: #fafafa;
+    color: #2c2c2c;
     text-align: center;
     text-transform: uppercase;
-    background: #ff7104;
-    border-top: 1px solid #ff6004;
+    /* background: #ff7104; */
+    /* border-top: 1px solid #ff6004; */
     padding: 6px 25px 6px 25px;
     box-sizing: border-box;
-    border: 0.5px solid var(--borderColor);
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    /* border: 0.5px solid var(--borderColor); */
     justify-content: center;
     align-items: center;
 }
